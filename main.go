@@ -2,12 +2,20 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 )
 
 func main() {
+	file, err := os.OpenFile("radiossl.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	log.SetOutput(file)
+
 	log.Print("Starting application")
 
 	app := tview.NewApplication()
