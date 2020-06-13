@@ -8,6 +8,8 @@ import (
 	"github.com/rivo/tview"
 )
 
+const tag = "main"
+
 func main() {
 	file, err := os.OpenFile("radigossl.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
@@ -16,7 +18,7 @@ func main() {
 	defer file.Close()
 	log.SetOutput(file)
 
-	log.Print("Starting application")
+	log.Printf("[%s] Starting application", tag)
 
 	app := tview.NewApplication()
 	title := tview.NewTextView()
