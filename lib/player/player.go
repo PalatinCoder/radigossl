@@ -24,11 +24,29 @@ func Init() {
 	if err != nil {
 		log.Fatalf("[%s] %d", tag, err)
 	}
+
+	playerEventManager, err = streamPlayer.EventManager()
+	if err != nil {
+		log.Printf("[%s] could not initialize event manager: %d", tag, err)
+	}
+
+	for _, event := range playerEvents {
+		eventID, err := playerEventManager.Attach(event, handlePlayerEvents, nil)
+		if err != nil {
+			log.Printf("[%s/eventmanager] %d", tag, err)
+		}
+		playerEventIDs = append(playerEventIDs, eventID)
+	}
 }
 
-// Close releases the libvlc instance
-func Close() {
+// Release cleans up the libvlc instance
+func Release() {
 	log.Printf("[%s] closing", tag)
+
+	for _, eventID := range playerEventIDs {
+		playerEventManager.Detach(eventID)
+	}
+
 	streamPlayer.Release()
 	vlc.Release()
 }
@@ -58,4 +76,18 @@ func Stop() {
 	streamPlayer.Stop()
 	media, _ := streamPlayer.Media()
 	media.Release()
+}
+
+var playerEventManager *vlc.EventManager
+var playerEventIDs []vlc.EventID
+
+var playerEvents = []vlc.Event{
+	vlc.MediaPlayerBuffering,
+}
+
+func handlePlayerEvents(event vlc.Event, userData interface{}) {
+	switch event {
+	case vlc.MediaPlayerBuffering:
+		log.Printf("[%s/eventhandler] buffering", tag)
+	}
 }
