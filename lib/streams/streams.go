@@ -18,10 +18,11 @@ type stream struct {
 	URLHigh    string `json:"url_high"`
 }
 
+// Streams is a map of available streams
 var Streams map[string]stream
 
-// Get collects the stream infos from the station's api
-func Get() {
+// RetrieveStreams collects the stream infos from the station's api
+func RetrieveStreams() {
 	log.Printf("[%s] get streams", tag)
 
 	httpClient := &http.Client{
