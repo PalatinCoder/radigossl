@@ -22,7 +22,7 @@
             "type": "go",
             "request": "launch",
             "mode": "exec",
-            "program": "${workspaceFolder}/radigossl.exe",
+            "program": "${workspaceFolder}/bin/radigossl.exe",
             "preLaunchTask": "build",
             "env": {
                 "PATH": "${env:PATH};${workspaceFolder}\\libvlc\\x64"

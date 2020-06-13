@@ -15,4 +15,4 @@
 vendor/
 
 # Build directory
-dist/
+bin/

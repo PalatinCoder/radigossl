@@ -9,8 +9,8 @@ import (
 
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
-	"jan-sl.de/radigossl/player"
-	"jan-sl.de/radigossl/streams"
+	"jan-sl.de/radigossl/lib/player"
+	"jan-sl.de/radigossl/lib/streams"
 )
 
 const tag = "main"

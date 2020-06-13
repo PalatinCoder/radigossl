@@ -16,7 +16,7 @@
             "args": [
                 "build",
                 "-o",
-                "dist/radigossl.exe"
+                "bin/radigossl.exe"
             ],
             "group": "build",
             "problemMatcher": [
