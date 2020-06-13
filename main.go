@@ -1,22 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/gdamore/tcell"
-	"github.com/rivo/tview"
 	"jan-sl.de/radigossl/lib/player"
 	"jan-sl.de/radigossl/lib/streams"
+	"jan-sl.de/radigossl/view"
 )
 
 const tag = "main"
-
-// signal when to quit the program
-var quitChan = make(chan bool)
 
 func main() {
 
@@ -30,8 +25,7 @@ func main() {
 
 	log.Printf("[%s] Starting application", tag)
 
-	// start SIGTERM handler
-	go watchSignal()
+	go watchSignals()
 
 	// start the stream
 	streams.Get()
@@ -39,41 +33,22 @@ func main() {
 	log.Printf("[%s] playing %s from url %s", tag, streams.Streams["1"].Stream, SSLUrl)
 
 	player.Init()
+	defer player.Release()
 	player.Play(SSLUrl)
+	defer player.Stop()
 
-	// setup ui
-	app := tview.NewApplication()
-	title := tview.NewTextView()
+	// run the view
+	view.Run() // this call blocks while the view (i.e. the app) is running
 
-	title.SetText("\n\n[orange]sunshine live\n\n[blue]electronic music radio").SetTextAlign(tview.AlignCenter).SetDynamicColors(true)
-	title.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyESC {
-			log.Printf("[%s/ui] exit", tag)
-			app.Stop()
-			close(quitChan)
-		}
-		return event
-	})
-	log.Printf("[%s/ui] starting ui", tag)
-	if err := app.SetRoot(title, true).Run(); err != nil {
-		log.Fatalf("[%s] ui initialization failed: %d", tag, err)
-		fmt.Printf("UI failed, but playing anyways.\nPress CTRL-C to quit")
-	}
-
-	// now wait until we quit
-	<-quitChan
 	log.Printf("[%s] Cleaning up", tag)
-	player.Stop()
-	player.Close()
-	log.Printf("[%s] End", tag)
 }
 
 // SIGTERM handler to gracefully end
-func watchSignal() {
+func watchSignals() {
 	signalChan := make(chan os.Signal)
 	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 
-	<-signalChan
+	<-signalChan // blocks until signal.Notify writes something in the chanel
 	log.Printf("[%s] received interrupt", tag)
-	close(quitChan)
+	view.Stop()
 }
