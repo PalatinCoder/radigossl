@@ -1,4 +1,4 @@
-module jan-sl.de/radiossl
+module jan-sl.de/radigossl
 
 go 1.14
 
