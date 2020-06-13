@@ -1,7 +1,5 @@
 {
     "version": "2.0.0",
-    "type": "shell",
-    "command": "go",
     "options": {
         "cwd": "${workspaceFolder}",
         "env": {
@@ -13,6 +11,8 @@
     "tasks": [
         {
             "label": "build",
+            "command": "go",
+            "type": "shell",
             "args": [
                 "build",
                 "-o",
@@ -24,7 +24,37 @@
             ],
             "presentation": {
                 "reveal": "always"
+            }
+        },
+        {
+            "label": "debugger",
+            "command": "dlv",
+            "args": [
+                "debug",
+                "--headless",
+                "--api-version",
+                "2",
+                "--log",
+                "--build-flags",
+                "-tags=debug",
+                "--listen",
+                "127.0.0.1:2345"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
             },
+            "isBackground": true,
+            "type": "shell",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": []
         }
     ]
 }

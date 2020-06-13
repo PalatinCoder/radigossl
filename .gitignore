@@ -16,3 +16,6 @@ vendor/
 
 # Build directory
 bin/
+
+# Application logfile
+*.log
