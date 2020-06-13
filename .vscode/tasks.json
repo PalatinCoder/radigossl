@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "type": "shell",
+    "command": "go",
+    "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+            "CGO_CFLAGS": "-I${workspaceFolder}\\libvlc\\x64\\include -Wno-deprecated-declarations -Wno-int-to-pointer-cast",
+            "CGO_LDFLAGS": "-L${workspaceFolder}\\libvlc\\x64",
+            "PATH": "${env:PATH};${workspaceFolder}\\libvlc\\x64"
+        },
+    },
+    "tasks": [
+        {
+            "label": "build",
+            "args": [
+                "build",
+                "-o",
+                "dist/radigossl.exe"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$go"
+            ],
+            "presentation": {
+                "reveal": "always"
+            },
+        }
+    ]
+}
