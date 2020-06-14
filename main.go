@@ -3,8 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
 
 	"jan-sl.de/radigossl/lib/player"
 	"jan-sl.de/radigossl/lib/streams"
@@ -25,8 +23,6 @@ func main() {
 
 	log.Printf("[%s] Starting application", tag)
 
-	go watchSignals()
-
 	// start the stream
 	streams.RetrieveStreams()
 	SSLUrl := "http:" + streams.Streams["1"].URLLow
@@ -41,14 +37,4 @@ func main() {
 	view.Run() // this call blocks while the view (i.e. the app) is running
 
 	log.Printf("[%s] Cleaning up", tag)
-}
-
-// SIGTERM handler to gracefully end
-func watchSignals() {
-	signalChan := make(chan os.Signal)
-	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
-
-	<-signalChan // blocks until signal.Notify writes something in the chanel
-	log.Printf("[%s] received interrupt", tag)
-	view.Stop()
 }

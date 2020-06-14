@@ -35,8 +35,3 @@ func handleKeyEvent(event *tcell.EventKey) *tcell.EventKey {
 	}
 	return event
 }
-
-// Stop ends the ui
-func Stop() {
-	app.Stop()
-}
