@@ -73,6 +73,8 @@ func Play(streamURL string) {
 
 // Stop stops the playback
 func Stop() {
+	log.Printf("[%s] stop playback", tag)
+
 	streamPlayer.Stop()
 	media, _ := streamPlayer.Media()
 	media.Release()

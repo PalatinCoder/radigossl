@@ -25,13 +25,9 @@ func main() {
 
 	// start the stream
 	streams.RetrieveStreams()
-	SSLUrl := "http:" + streams.Streams[1].URLLow
-	log.Printf("[%s] playing %s from url %s", tag, streams.Streams[1].Stream, SSLUrl)
 
 	player.Init()
 	defer player.Release()
-	player.Play(SSLUrl)
-	defer player.Stop()
 
 	// run the view
 	view.Run() // this call blocks while the view (i.e. the app) is running

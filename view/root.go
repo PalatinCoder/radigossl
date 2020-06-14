@@ -1,11 +1,11 @@
 package view
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/gdamore/tcell"
 	"gitlab.com/tslocum/cview"
+	"jan-sl.de/radigossl/lib/player"
 	"jan-sl.de/radigossl/lib/streams"
 )
 
@@ -28,7 +28,7 @@ func Run() {
 		SetTitleAlign(cview.AlignLeft)
 
 	for _, stationID := range streams.StreamStationIDs {
-		streamList.AddItem(streams.Streams[stationID].Stream, "", 0, func() { log.Printf("[%s] selected station id %d", tag, stationID) })
+		streamList.AddItem(streams.Streams[stationID].Stream, "", 0, nil)
 	}
 
 	// now playing
@@ -39,6 +39,18 @@ func Run() {
 		SetTitle("🎵 now playing").
 		SetTitleAlign(cview.AlignLeft).
 		SetBorder(true)
+
+	streamList.SetSelectedFunc(func(idx int, maintext string, secondarytext string, shortcut rune) {
+		log.Printf("[%s] selected stream changed", tag)
+
+		stationID := streams.StreamStationIDs[idx]
+		url := "http:" + streams.Streams[stationID].URLHigh
+		nowplaying.SetText(streams.Streams[stationID].Stream)
+
+		log.Printf("[%s] playing %s from url %s", tag, streams.Streams[stationID].Stream, url)
+		player.Stop()
+		player.Play(url)
+	})
 
 	// player controls
 	controls := cview.NewGrid()
@@ -61,7 +73,6 @@ func Run() {
 	app.SetInputCapture(handleKeyEvent)
 	if err := app.SetRoot(flex, true).Run(); err != nil {
 		log.Fatalf("[%s] ui initialization failed: %d", tag, err)
-		fmt.Printf("UI failed, but playing anyways.\nPress CTRL-C to quit")
 	}
 }
 
