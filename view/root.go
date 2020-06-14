@@ -16,17 +16,45 @@ var app = cview.NewApplication()
 func Run() {
 	log.Printf("[%s] starting ui", tag)
 
-	// main layout
-	view := cview.NewTextView().
-		SetDynamicColors(true).
-		SetText("\n[orange]sunshine live\n\n[blue]electronic music radio").
-		SetTextAlign(cview.AlignCenter)
-	view.
+	// stream list
+	streamList := cview.NewList()
+	streamList.
+		Clear().
+		SetHighlightFullLine(true).
+		ShowSecondaryText(false).
 		SetBorder(true).
-		SetTitle("radigossl")
+		SetTitle("📻 streams").
+		SetTitleAlign(cview.AlignLeft)
+
+	// now playing
+	nowplaying := cview.NewTextView()
+	nowplaying.
+		SetText("...").
+		SetTextAlign(cview.AlignCenter).
+		SetTitle("🎵 now playing").
+		SetTitleAlign(cview.AlignLeft).
+		SetBorder(true)
+
+	// player controls
+	controls := cview.NewGrid()
+	controls.
+		SetSize(1, 4, 0, 0).
+		AddItem(cview.NewButton("Play/Pause"), 0, 0, 1, 1, 0, 0, false).
+		AddItem(cview.NewButton("Quit"), 0, 3, 1, 1, 0, 0, false).
+		SetBorders(true).
+		SetTitle("🎛️ controls").
+		SetTitleAlign(cview.AlignLeft).
+		SetBorder(true)
+
+	// main layout
+	flex := cview.NewFlex().
+		SetDirection(cview.FlexRow).
+		AddItem(streamList, 0, 1, true).
+		AddItem(nowplaying, 3, 1, false).
+		AddItem(controls, 5, 1, false)
 
 	app.SetInputCapture(handleKeyEvent)
-	if err := app.SetRoot(view, true).Run(); err != nil {
+	if err := app.SetRoot(flex, true).Run(); err != nil {
 		log.Fatalf("[%s] ui initialization failed: %d", tag, err)
 		fmt.Printf("UI failed, but playing anyways.\nPress CTRL-C to quit")
 	}
