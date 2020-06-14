@@ -5,23 +5,28 @@ import (
 	"log"
 
 	"github.com/gdamore/tcell"
-	"github.com/rivo/tview"
+	"gitlab.com/tslocum/cview"
 )
 
 const tag = "view/root"
 
-var app *tview.Application
+var app = cview.NewApplication()
 
 // Run starts the user interface
 func Run() {
-	app = tview.NewApplication()
-	title := tview.NewTextView()
-
-	title.SetText("\n\n[orange]sunshine live\n\n[blue]electronic music radio").SetTextAlign(tview.AlignCenter).SetDynamicColors(true)
-	title.SetInputCapture(handleKeyEvent)
-
 	log.Printf("[%s] starting ui", tag)
-	if err := app.SetRoot(title, true).Run(); err != nil {
+
+	// main layout
+	view := cview.NewTextView().
+		SetDynamicColors(true).
+		SetText("\n[orange]sunshine live\n\n[blue]electronic music radio").
+		SetTextAlign(cview.AlignCenter)
+	view.
+		SetBorder(true).
+		SetTitle("radigossl")
+
+	app.SetInputCapture(handleKeyEvent)
+	if err := app.SetRoot(view, true).Run(); err != nil {
 		log.Fatalf("[%s] ui initialization failed: %d", tag, err)
 		fmt.Printf("UI failed, but playing anyways.\nPress CTRL-C to quit")
 	}
