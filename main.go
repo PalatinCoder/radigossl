@@ -25,8 +25,8 @@ func main() {
 
 	// start the stream
 	streams.RetrieveStreams()
-	SSLUrl := "http:" + streams.Streams["1"].URLLow
-	log.Printf("[%s] playing %s from url %s", tag, streams.Streams["1"].Stream, SSLUrl)
+	SSLUrl := "http:" + streams.Streams[1].URLLow
+	log.Printf("[%s] playing %s from url %s", tag, streams.Streams[1].Stream, SSLUrl)
 
 	player.Init()
 	defer player.Release()

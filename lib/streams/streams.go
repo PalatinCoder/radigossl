@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sort"
 	"time"
 )
 
@@ -18,8 +19,11 @@ type stream struct {
 	URLHigh    string `json:"url_high"`
 }
 
-// Streams is a map of available streams
-var Streams map[string]stream
+// Streams is a map of available streams, where the key is the station ID of the stream
+var Streams map[int]stream
+
+// StreamStationIDs holds all available stations IDs in ascending order
+var StreamStationIDs []int
 
 // RetrieveStreams collects the stream infos from the station's api
 func RetrieveStreams() {
@@ -42,8 +46,17 @@ func RetrieveStreams() {
 		log.Fatalf("[%s] Error reading response: %d", tag, err)
 	}
 
-	err = json.Unmarshal(body, &Streams)
+	var rawList map[string]stream
+	err = json.Unmarshal(body, &rawList)
 	if err != nil {
 		log.Fatalf("[%s] could not decode response: %d", tag, err)
 	}
+
+	// bring the list in final order, to make access easier later on
+	Streams = make(map[int]stream, len(rawList))
+	for _, stream := range rawList {
+		Streams[stream.StationID] = stream
+		StreamStationIDs = append(StreamStationIDs, stream.StationID)
+	}
+	sort.Ints(StreamStationIDs)
 }
