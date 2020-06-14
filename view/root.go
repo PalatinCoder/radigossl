@@ -6,6 +6,7 @@ import (
 
 	"github.com/gdamore/tcell"
 	"gitlab.com/tslocum/cview"
+	"jan-sl.de/radigossl/lib/streams"
 )
 
 const tag = "view/root"
@@ -25,6 +26,10 @@ func Run() {
 		SetBorder(true).
 		SetTitle("📻 streams").
 		SetTitleAlign(cview.AlignLeft)
+
+	for _, stationID := range streams.StreamStationIDs {
+		streamList.AddItem(streams.Streams[stationID].Stream, "", 0, func() { log.Printf("[%s] selected station id %d", tag, stationID) })
+	}
 
 	// now playing
 	nowplaying := cview.NewTextView()
