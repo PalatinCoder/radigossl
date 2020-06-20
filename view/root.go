@@ -24,7 +24,8 @@ func Run() {
 		SetHighlightFullLine(true).
 		ShowSecondaryText(false).
 		SetBorder(true).
-		SetTitle("📻 streams").
+		SetBorderColor(tcell.ColorBlue).
+		SetTitle(" 📻 streams ").
 		SetTitleAlign(cview.AlignLeft)
 
 	for _, stationID := range streams.StreamStationIDs {
@@ -36,8 +37,9 @@ func Run() {
 	nowplaying.
 		SetText("...").
 		SetTextAlign(cview.AlignCenter).
-		SetTitle("🎵 now playing").
+		SetTitle(" 🎵 now playing ").
 		SetTitleAlign(cview.AlignLeft).
+		SetBorderColor(tcell.ColorOrange).
 		SetBorder(true)
 
 	streamList.SetSelectedFunc(func(idx int, maintext string, secondarytext string, shortcut rune) {
