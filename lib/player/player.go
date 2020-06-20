@@ -77,8 +77,6 @@ func Stop() {
 	log.Printf("[%s] stop playback", tag)
 
 	streamPlayer.Stop()
-	media, _ := streamPlayer.Media()
-	media.Release()
 }
 
 var playerEventManager *vlc.EventManager
