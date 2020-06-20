@@ -24,6 +24,7 @@ func Init() {
 	if err != nil {
 		log.Fatalf("[%s] %d", tag, err)
 	}
+	vlc.SetAppName("RadiGoSSL", "radigossl (libvlc compatible)")
 
 	playerEventManager, err = streamPlayer.EventManager()
 	if err != nil {
