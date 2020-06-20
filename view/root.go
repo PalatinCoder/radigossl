@@ -52,23 +52,11 @@ func Run() {
 		player.Play(url)
 	})
 
-	// player controls
-	controls := cview.NewGrid()
-	controls.
-		SetSize(1, 4, 0, 0).
-		AddItem(cview.NewButton("Play/Pause"), 0, 0, 1, 1, 0, 0, false).
-		AddItem(cview.NewButton("Quit"), 0, 3, 1, 1, 0, 0, false).
-		SetBorders(true).
-		SetTitle("🎛️ controls").
-		SetTitleAlign(cview.AlignLeft).
-		SetBorder(true)
-
 	// main layout
 	flex := cview.NewFlex().
 		SetDirection(cview.FlexRow).
 		AddItem(streamList, 0, 1, true).
-		AddItem(nowplaying, 3, 1, false).
-		AddItem(controls, 5, 1, false)
+		AddItem(nowplaying, 3, 1, false)
 
 	app.SetInputCapture(handleKeyEvent)
 	if err := app.SetRoot(flex, true).Run(); err != nil {
@@ -81,6 +69,15 @@ func handleKeyEvent(event *tcell.EventKey) *tcell.EventKey {
 	case tcell.KeyESC:
 		log.Printf("[%s] exit due to ESC key", tag)
 		app.Stop()
+	case tcell.KeyRune:
+		switch event.Rune() {
+		case 'p', 's':
+			log.Printf("[%s] pausing playback", tag)
+			player.Stop()
+		case 'q':
+			log.Printf("[%s] exit due to q key", tag)
+			app.Stop()
+		}
 	}
 	return event
 }
